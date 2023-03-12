@@ -3,13 +3,62 @@ const startScreen = document.querySelector(".startScreen");
 const gameArea = document.querySelector(".gameArea");
 /*console.log(gameArea);*/
 startScreen.addEventListener("click", start);
-let player = { speed: 5, score: 0 };
+
+
+
+let player = { speed: 4, score: 0 ,timeCount:0};
+
+
+
 let keys = {
   ArrowUp: false,
   ArrowDown: false,
   ArrowLeft: false,
   ArrowRight: false,
 };
+
+document.addEventListener("keydown", function(event) {
+  if (event.code === "Space") {
+    Attack();
+  }
+});
+
+function Attack() {
+  let laser = document.createElement("div");
+  laser.classList.add("laser");
+  gameArea.appendChild(laser);
+
+  let ship = document.querySelector(".ship");
+
+  laser.style.left = ship.offsetLeft + 20 + "px";
+  laser.style.top = ship.offsetTop + "px";
+
+  let laserInterval = setInterval(function () {
+    let enemies = document.querySelectorAll(".enemy");
+    enemies.forEach(function (enemy) {
+      if (isCollide(laser, enemy)) {
+      
+        enemy.y = -300;
+        enemy.style.left = Math.floor(Math.random() * 350) + "px";
+        laser.remove();
+        
+        player.score += 100;
+        score.innerText = "Score: " + player.score;
+      }
+    });
+
+    let lasers = document.querySelectorAll(".laser");
+    lasers.forEach(function (laser) {
+      if (laser.offsetTop > 0) {
+        laser.style.top = laser.offsetTop - 5 + "px";
+      } else {
+        laser.remove();
+      }
+    });
+  }, 20);
+}
+
+
 
 document.addEventListener("keydown", keyDown);
 document.addEventListener("keyup", keyUp);
@@ -81,7 +130,7 @@ function gamePlay() {
     moveLines();
     moveEnemy(ship);
 
-    if (keys.ArrowUp && player.y > road.top + 70) {
+   if (keys.ArrowUp && player.y > road.top + 70) {
       player.y -= player.speed;
     }
     if (keys.ArrowDown && player.y < road.bottom - 85) {
@@ -97,9 +146,11 @@ function gamePlay() {
     ship.style.left = player.x + "px";
     window.requestAnimationFrame(gamePlay);
     console.log(player.score++);
-    player.score++;
+     player.score++;
     let ps = player.score - 1;
     score.innerText = "Score: " + ps;
+
+   
   }
 }
 function start() {
@@ -109,6 +160,8 @@ function start() {
   player.start = true;
   player.score = 0;
   window.requestAnimationFrame(gamePlay);
+  player.timeCount=0;
+
 
   for (x = 0; x < 5; x++) {
     let roadLine = document.createElement("div");
@@ -129,7 +182,7 @@ function start() {
   /* console.log(ship.offsetTop);
                 console.log(ship.offsetLeft);*/
 
-  for (x = 0; x < 3; x++) {
+  for (x = 0; x < 10; x++) {
     let enemyAstroid = document.createElement("div");
     enemyAstroid.setAttribute("class", "enemy");
     enemyAstroid.y = (x + 1) * 350 * -1;
@@ -138,3 +191,4 @@ function start() {
     gameArea.appendChild(enemyAstroid);
   }
 }
+
