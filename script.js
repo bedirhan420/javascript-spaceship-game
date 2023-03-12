@@ -6,7 +6,7 @@ startScreen.addEventListener("click", start);
 
 
 
-let player = { speed: 4, score: 0 ,timeCount:0};
+let player = { speed: 5, score: 0 ,timeCount:0};
 
 
 
@@ -29,6 +29,8 @@ function Attack() {
   gameArea.appendChild(laser);
 
   let ship = document.querySelector(".ship");
+  let laserSound = new Audio("laser_sound.mp3");
+  laserSound.play();
 
   laser.style.left = ship.offsetLeft + 20 + "px";
   laser.style.top = ship.offsetTop + "px";
@@ -37,9 +39,13 @@ function Attack() {
     let enemies = document.querySelectorAll(".enemy");
     enemies.forEach(function (enemy) {
       if (isCollide(laser, enemy)) {
-      
+        
+        let explosionSound = new Audio("explosion_sound.mp3");
+        explosionSound.play();
+        
         enemy.y = -300;
         enemy.style.left = Math.floor(Math.random() * 350) + "px";
+       
         laser.remove();
         
         player.score += 100;
@@ -98,6 +104,8 @@ function moveLines() {
   });
 }
 function endGame() {
+  let gameOver= new Audio("game_over.wav");
+  gameOver.play();
   player.start = false;
   startScreen.classList.remove("hide");
   startScreen.innerHTML =
@@ -182,7 +190,7 @@ function start() {
   /* console.log(ship.offsetTop);
                 console.log(ship.offsetLeft);*/
 
-  for (x = 0; x < 10; x++) {
+  for (x = 0; x < 3; x++) {
     let enemyAstroid = document.createElement("div");
     enemyAstroid.setAttribute("class", "enemy");
     enemyAstroid.y = (x + 1) * 350 * -1;
